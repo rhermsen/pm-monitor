@@ -24,7 +24,7 @@ def get_humidity():
     """Obtain the outdoor humidity value for Nijmegen from openweathermap.org via API"""
 
     url ='https://api.openweathermap.org/data/2.5/weather'
-    api_key = 'ade54d04b4cf8eb2f4cb7c4005e8a790'
+    api_key = 'revoked'
     city = 'Nijmegen'
 
     querystring = {"q":city, 'appid':api_key, 'units':'metric'}
