@@ -1,5 +1,6 @@
 *.egg-info
 *.pyc
+outdoor_humidity.py
 
 build
 dist
