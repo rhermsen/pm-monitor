@@ -1,4 +1,5 @@
 from datetime import datetime 
+# pip install python-dateutil
 import dateutil.parser as parser
 
 def sanitize_sensor_record(r):

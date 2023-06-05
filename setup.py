@@ -2,15 +2,15 @@
 
 from setuptools import setup, find_packages
 
-setup(name='monitor_rtl433',
+setup(name='PM-Monitor',
       version='1.0',
-      description='Python HTTP wrapper for rtl_433',
-      author='Jeff McBride',
-      author_email='jeff@jeffmcbride.net',
+      description='Python HTTP wrapper for PM-Monitor',
+      author='Ron Hermsen',
+      author_email='ronhermsen@gmail.com',
       packages=find_packages(),
       zip_safe=False,
       entry_points={
-          'console_scripts': ['monitor_rtl433=monitor_rtl433.main:main']
+          'console_scripts': ['pm_monitor=pm_monitor.main:main']
       },
       install_requires=[
          'python-dateutil',

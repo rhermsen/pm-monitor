@@ -1,5 +1,7 @@
+#pip install -U Flask
 import flask
 import json
+#pip install Flask-Table
 from flask_table import Table, Col
 import pprint
 
