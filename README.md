@@ -1,6 +1,9 @@
+# Credit
+This repo is forked from the [monitor_rtl433](https://github.com/mcbridejc/monitor_rtl433) and adapted to my needs.
+
 # PM-monitor
 
-A wrapper to collect data from 'PM Detector' PM2.5 sensors using serial over USB, and make it available as metrics in [prometheus format](https://github.com/prometheus/docs/blob/master/content/docs/instrumenting/exposition_formats.md). 
+A wrapper to collect data from 'PM Detector' PM2.5, temperature and humidity sensors using serial over USB, and make it available as metrics in [prometheus format](https://github.com/prometheus/docs/blob/master/content/docs/instrumenting/exposition_formats.md). 
 
 ## Requirements
 

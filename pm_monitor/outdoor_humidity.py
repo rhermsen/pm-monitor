@@ -5,27 +5,35 @@ Created on Mon Apr 17  23:20:00 2023
 @author: rhermsen
 
 Description:
-    Python script to obtain the outdoor relative humidity for Nijmegen as a string.
+    Python script to obtain the outdoor relative humidity for $CITY as a string.
     The output will be used by PM-monitor which expects a JSON formatted output with a timestamp, sensor model, sensor_id and the humidity value.
 
 ToDo:
     - Verify what is the current timeout?.
-    - a specific debug option might also be an option.
+    - A specific debug option might also be an option.
 Done:
-    - add a try except error handling for e.g. timeouts.
+    - Add a try except error handling for e.g. timeouts.
+
+Preperation on Linux:
+    - Create an environment variable $CITY for the city of interrest e.g. in ~/.profile.
+    - Create an environment variable $OWM_API_KEY for the personal API key to use with openweathermap.org e.g. in ~/.profile.
+
 """
 #Obtain Outdoor Humidity
 
 import requests
 from datetime import datetime
+import os
 
 
 def get_humidity():
-    """Obtain the outdoor humidity value for Nijmegen from openweathermap.org via API"""
+    """Obtain the outdoor humidity value for $CITY from openweathermap.org via API"""
 
     url ='https://api.openweathermap.org/data/2.5/weather'
-    api_key = 'revoked'
-    city = 'Nijmegen'
+    #api_key = 'revoked'
+    #city = 'Nijmegen'
+    api_key = os.environ['OWM_API_KEY']
+    city = os.environ['CITY']
 
     querystring = {"q":city, 'appid':api_key, 'units':'metric'}
 
