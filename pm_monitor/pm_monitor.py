@@ -274,7 +274,7 @@ class PMDcommunicator(object):
         self.SendInteralFlag = False
         # below line should change to:
         #self.serialPort.reset_input_buffer()
-		self.clearReadBuffer()
+        self.clearReadBuffer()
         #self.serialPort.flushInput()
         # Wait one second after an input flush to prevent subsequent commands to become flushed.
         # # below flush part can be used if issue is understood.
