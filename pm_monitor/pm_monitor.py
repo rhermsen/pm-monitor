@@ -36,6 +36,11 @@ Version 1.6 2023-05-24 14:01:
     Added an time.sleep(0.5) after each write where it expects data in return from the PM-detector.
 Version 1.7 2023-06-09 23:55:
     Add getters and setters (clear) for read and write buffers, because with in_ and out_ I'm keep mixing them up.
+Version 1.8 2023-06-10 12:34:
+    Determined that 20ms sleep is the minimum needed to wait for the whole JSON string to arrive in the read buffer.
+    Will use a 0.4s sleep in the pushStopPMdetector() reset the write_buffer sleep another 0.4s reset the read_buffer
+    and use a 0.2s sleep at the end, so pushStopPMdetector() will still in total contribute to a 1s sleep.
+    Also reset the read_buffer in case wrong response-type was receieved in method get_message() and pushStartPMdetector().
 
 	
 @author: rhermsen
@@ -241,14 +246,11 @@ class PMDcommunicator(object):
                 error_message = error_message + " read buffer:" + str(self.getReadBuffer())
             except:
                 pass
-            # below flush part can be used if issue is understood.
-            # if len(PMData) >= 20:
-            #     # Received response much larger than expected. Correct response is probably still in serial buffer.
-            #     # Flush the serial output buffer. 
-            #     time.sleep(0.5)
-            #     # self.serialPort.reset_output_buffer()
-            #     self.clearWriteBuffer()
-            #     time.sleep(0.5)
+            if len(PMData) >= 20:
+                # Received response much larger than expected. Correct response is probably still in serial buffer.
+                time.sleep(0.5)
+                self.clearReadBuffer()
+                time.sleep(0.5)
             return False, error_message
         
 
@@ -272,16 +274,11 @@ class PMDcommunicator(object):
         initStopString = '{"fun":"05","flag":"0"}\n' #Start obtaining data with last submitted sendtime.
         self.serialPort.write(initStopString.encode('Ascii'))
         self.SendInteralFlag = False
-        # below line should change to:
-        #self.serialPort.reset_input_buffer()
+        time.sleep(0.4)
+        self.clearWriteBuffer()
+        time.sleep(0.4)
         self.clearReadBuffer()
-        #self.serialPort.flushInput()
-        # Wait one second after an input flush to prevent subsequent commands to become flushed.
-        # # below flush part can be used if issue is understood.
-        # time.sleep(0.5)
-        # self.clearWriteBuffer()
-        # time.sleep(0.5)
-        time.sleep(1)
+        time.sleep(0.2)
 
 
     def readPMdetector(self, timeout=30):
@@ -597,18 +594,14 @@ class PMDcommunicator(object):
                     error_message = error_message + " read buffer:" + str(self.getReadBuffer())
                 except:
                     pass 
-                
-                # # below flush part can be used if issue is understood.
-                # try:
-                #     if len(data_dict) == 1 and data_dict["res"] == "5":
-                #         # Received the wrong response type. Correct response is probably still in serial buffer.
-                #         # Flush the serial output buffer. 
-                #         time.sleep(0.5)
-                #         # self.serialPort.reset_output_buffer()
-                #         self.clearWriteBuffer()
-                #         time.sleep(0.5)
-                # except Exception as e:
-                #     pass
+                try:
+                    if len(data_dict) == 1 and data_dict["res"] == "5":
+                        # Received the wrong response type. Correct response is probably still in serial buffer. 
+                        time.sleep(0.5)
+                        self.clearReadBuffer()
+                        time.sleep(0.5)
+                except Exception as e:
+                    pass
             return None, error_message, error_message2
 
 
