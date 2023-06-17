@@ -13,6 +13,7 @@ ToDo:
     - A specific debug option might also be an option.
 Done:
     - Add a try except error handling for e.g. timeouts.
+    - Add excpetion handling for exceptions (e.g. KeyError) in humidiy = str(response[key]) and return None, for both get_humidity...() functions.
 
 Preperation on Linux:
     - Create an environment variable $CITY for the city of interrest e.g. in ~/.profile.
@@ -44,8 +45,11 @@ def get_humidity():
     except Exception as e:
         return None
     else:
-        humidity = str(response['main']['humidity'])
-        return humidity
+        try:
+            humidity = str(response['main']['humidity'])
+            return humidity
+        except Exception as e:
+            return None
 
 
 def get_humidity_buienradar():
@@ -59,8 +63,11 @@ def get_humidity_buienradar():
         #print("ErrorType : {}, Error : {}".format(type(e).__name__, e))
         return None
     else:
-        humidity = str(response['actual']['stationmeasurements'][1]['humidity'])
-        return humidity
+        try:
+            humidity = str(response['actual']['stationmeasurements'][1]['humidity'])
+            return humidity
+        except Exception as e:
+            return None
 
 
 def get_message2(timeout=30):
