@@ -13,10 +13,10 @@ ToDo:
     - A specific debug option might also be an option.
 Done:
     - Add a try except error handling for e.g. timeouts.
-    - Add excpetion handling for exceptions (e.g. KeyError) in humidiy = str(response[key]) and return None, for both get_humidity...() functions.
+    - Add exception handling for exceptions (e.g. KeyError) in humidity = str(response[key]) and return None, for both get_humidity...() functions.
 
-Preperation on Linux:
-    - Create an environment variable $CITY for the city of interrest e.g. in ~/.profile.
+Preparation on Linux:
+    - Create an environment variable $CITY for the city of interest e.g. in ~/.profile.
     - Create an environment variable $OWM_API_KEY for the personal API key to use with openweathermap.org e.g. in ~/.profile.
 
 """
