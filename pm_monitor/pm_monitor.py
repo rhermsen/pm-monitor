@@ -41,7 +41,16 @@ Version 1.8 2023-06-10 12:34:
     Will use a 0.4s sleep in the pushStopPMdetector() reset the write_buffer sleep another 0.4s reset the read_buffer
     and use a 0.2s sleep at the end, so pushStopPMdetector() will still in total contribute to a 1s sleep.
     Also reset the read_buffer in case wrong response-type was receieved in method get_message() and pushStartPMdetector().
+Version 1.9 2023-06-22 19:30:
+    The write_buffer gets send (emptied) in just a few milliseconds. No additional measures are needed.
+    Still see a problem with Grafana getting into 'No data' state.
+    Get a timeout for both pushStartPMdetector(), readPMdetector(). Added buffer data information to the error messages for both.
+Version 2.0 2023-06-22 22:59:
+    Return 'None' if PM2.5 reading is > 800
+Version 2.1 2023-06-25 23:45:
+    Include the actual reading if PM2.5 reading is above 800 in error message
 
+	
 	
 @author: rhermsen
 
@@ -228,7 +237,7 @@ class PMDcommunicator(object):
                 return False, error_message
             timeNow = time.time()
             if timeNow - startTime > timeout:
-                error_message = "Serial read: timeout"
+                error_message = "Serial read: timeout" + " read buffer:" + str(self.getReadBuffer()) + " write buffer:" + str(self.getWriteBuffer())
                 return False, error_message
         # https://www.geeksforgeeks.org/python-convert-string-dictionary-to-dictionary/
         try:
@@ -322,7 +331,7 @@ class PMDcommunicator(object):
                 return None, error_message, error_message2
             timeNow = time.time()
             if timeNow - startTime > timeout:
-                error_message = "timeout"
+                error_message = "timeout" + " read buffer:" + str(self.getReadBuffer()) + " write buffer:" + str(self.getWriteBuffer())
                 return None, error_message, error_message2
         try:
             jsonExport = json.loads(PMData)
@@ -586,6 +595,9 @@ class PMDcommunicator(object):
             message_dict["pm2_5"] = data_dict["cpm2.5"]
             message_dict["pm1_0"] = data_dict["cpm1.0"]
             message_dict["pm10"] = data_dict["cpm10"]
+            if int(data_dict["cpm2.5"]) > 800:
+                return None, f'PM2.5 reading above 800, reading {data_dict["cpm2.5"]}', ''
+            else:
             return message_dict, '', ''
         else:
             if error_message == None:
